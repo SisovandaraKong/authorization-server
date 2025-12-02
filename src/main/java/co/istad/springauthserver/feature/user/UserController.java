@@ -4,7 +4,11 @@ import co.istad.springauthserver.feature.user.dto.UserRequest;
 import co.istad.springauthserver.feature.user.dto.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,6 +20,11 @@ public class UserController {
     @PostMapping
     public UserResponse createUser(@RequestBody UserRequest userRequest) {
         return userService.createUser(userRequest);
+    }
+
+    @GetMapping("/me")
+    public Map<String, Object> getCurrentUser(@AuthenticationPrincipal Jwt jwt) {
+        return jwt.getClaims();
     }
 
     @PutMapping("/{uuid}/enable")

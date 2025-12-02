@@ -84,7 +84,8 @@ public class AuthServerSecurity {
                                 new LoginUrlAuthenticationEntryPoint("/login"),
                                 new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
                         )
-                );
+                )
+                .cors(Customizer.withDefaults()); // Enable CORS for OAuth2 endpoints
 
         return http.build();
     }
@@ -97,10 +98,13 @@ public class AuthServerSecurity {
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers(HttpMethod.POST, "/api/v1/users").permitAll()
                         .requestMatchers(HttpMethod.GET, "/login", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/api/v1/users/me", "/api/me").authenticated()
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form.loginPage("/login").permitAll())
                 .csrf(csrf -> csrf.disable())
+                .cors(Customizer.withDefaults()) // Enable CORS
+                .oauth2ResourceServer((resourceServer) -> resourceServer.jwt(Customizer.withDefaults()))
                 .httpBasic(Customizer.withDefaults());
 
         return http.build();
@@ -126,6 +130,7 @@ public class AuthServerSecurity {
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
                 .redirectUri("http://127.0.0.1:8080/login/oauth2/code/oidc-client")
+//                .redirectUri("http://localhost:3000/auth/callback")
                 .postLogoutRedirectUri("http://127.0.0.1:8080/")
                 .scope(OidcScopes.OPENID)
 //                .scope(OidcScopes.PROFILE)
