@@ -129,8 +129,10 @@ public class AuthServerSecurity {
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                 .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
                 .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-                .redirectUri("http://127.0.0.1:8080/login/oauth2/code/oidc-client")
-//                .redirectUri("http://localhost:3000/auth/callback")
+                // For spring
+//                .redirectUri("http://127.0.0.1:8080/login/oauth2/code/oidc-client")
+                // For nextJs
+                .redirectUri("http://localhost:3000/auth/callback")
                 .postLogoutRedirectUri("http://127.0.0.1:8080/")
                 .scope(OidcScopes.OPENID)
 //                .scope(OidcScopes.PROFILE)
